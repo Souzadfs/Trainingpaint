@@ -18,13 +18,11 @@ ball_speed_x = 5  # Velocidade horizontal da bola no eixo X
 positions_y = [screen_height // 5, 2 * screen_height // 5, 3 * screen_height // 5, 4 * screen_height // 5]  # Quatro posições: superior, meio-superior, meio-inferior, inferior
 current_y_index = 0  # Começa na posição superior
 ball_y = positions_y[current_y_index]  # Define a posição inicial como superior
-
-# Variável de controle para contagem de rebotes nas extremidades e direção
-bounce_count = 0  # Conta quantas vezes a bola bateu nas extremidades horizontais
-moving_down = True  # Define a direção vertical inicial (para baixo)
+moving_down = True  # Controle da direção vertical
 
 # Controle de movimento
 moving = True  # Define se a bola está em movimento ou parada
+line_complete = False  # Indica se a bolinha terminou a ida e volta na linha atual
 
 # Loop principal
 running = True
@@ -56,27 +54,22 @@ while running:
         # Rebote nas extremidades da tela
         if ball_x - ball_radius <= 0 or ball_x + ball_radius >= screen_width:
             ball_speed_x = -ball_speed_x  # Inverte a direção horizontal
-            bounce_count += 1  # Incrementa o contador de rebotes
 
-            # Após dois rebotes (ida e volta), muda a posição vertical
-            if bounce_count == 2:
-                bounce_count = 0  # Reseta a contagem de rebotes
-
-                # Atualiza a posição vertical com base na direção atual
+            # Se a bolinha completou a ida e volta, mudar a linha
+            if not line_complete:
+                line_complete = True  # Marca que a ida e volta foi completada
+            else:
+                # Quando a ida e volta estiver completa, move para a próxima linha
+                line_complete = False  # Reseta a flag de linha completa
                 if moving_down:
                     if current_y_index < len(positions_y) - 1:
-                        current_y_index += 1  # Vai para a linha de baixo
-                    else:
-                        moving_down = False  # Muda para subir ao chegar na última linha
-                        current_y_index -= 1  # Começa a subir
+                        current_y_index += 1
                 else:
                     if current_y_index > 0:
-                        current_y_index -= 1  # Vai para a linha de cima
-                    else:
-                        moving_down = True  # Muda para descer ao chegar na primeira linha
-                        current_y_index += 1  # Começa a descer
+                        current_y_index -= 1
 
-                ball_y = positions_y[current_y_index]  # Atualiza a posição vertical da bola
+                # Atualiza a posição vertical
+                ball_y = positions_y[current_y_index]
 
     # Preencher a tela e desenhar a bola
     screen.fill((255, 255, 255))  # Cor de fundo branca
