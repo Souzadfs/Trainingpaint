@@ -14,16 +14,16 @@ logo = pygame.transform.scale(logo, (200, 100))  # Redimensionar a logo, ajuste 
 logo_x = screen_width - 1360  # Ajustar posição X da logo
 logo_y = 20  # Ajustar posição Y da logo
 
-# Definir cores e variáveis da bola
-ball_color = (0, 0,255)
-ball_radius = 200
-ball_x = screen_width // 2
-ball_speed_x = 5  # Velocidade horizontal da bola no eixo X
+# Definir cor, tamanho e variáveis da bola
+ball_color = (0, 0, 255)
+ball_radius = 100  # Raio da bola
+ball_x = screen_width // 2  # Centraliza a bola horizontalmente
+ball_speed_x = 5  # Velocidade horizontal da bola
 
 # Variáveis de posição vertical
 positions_y = [screen_height // 5, 2 * screen_height // 5, 3 * screen_height // 5, 4 * screen_height // 5]
 current_y_index = 0  # Começa na posição superior
-ball_y = positions_y[current_y_index]  # Define a posição inicial como superior
+ball_y = positions_y[current_y_index]  # Define a posição inicial da bola
 
 # Variável de controle para contagem de rebotes nas extremidades e direção
 bounce_count = 0  # Conta quantas vezes a bola bateu nas extremidades horizontais
@@ -75,7 +75,7 @@ while running:
                         moving_down = True  # Muda para descer
                         current_y_index += 1
 
-                ball_y = positions_y[current_y_index]
+                ball_y = positions_y[current_y_index]  # Atualiza a posição vertical da bola
 
     # Preencher a tela com cinza e desenhar a logo
     screen.fill((169, 169, 169))  # Fundo cinza
@@ -85,6 +85,6 @@ while running:
     pygame.draw.circle(screen, ball_color, (ball_x, ball_y), ball_radius)
 
     pygame.display.flip()
-    clock.tick(60)  # Manter 60 FPS
+    clock.tick(200)  # Manter 60 FPS
 
 pygame.quit()
