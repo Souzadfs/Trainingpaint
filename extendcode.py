@@ -4,7 +4,7 @@ import pygame
 pygame.init()
 
 # Configurar a tela como redimensionável
-screen = pygame.display.set_mode((800, 600), pygame.RESIZABLE)
+screen = pygame.display.set_mode((800, 600), pygame.RESIZABLE)  # Janela inicial de 800x600, redimensionável
 pygame.display.set_caption("Simulação de Pintura em Zig-Zag")
 
 # Obter largura e altura da tela
@@ -20,14 +20,10 @@ logo_y = 20  # Ajustar posição Y da logo
 ball_color = (0, 0, 255)
 ball_radius = 100  # Raio da bola
 ball_x = ball_radius  # Iniciar a bola na borda esquerda
-ball_speed_x = (screen_width - 2 * ball_radius) // 9  # Distância para 9 passos horizontais
+ball_speed_x = 5  # Velocidade horizontal da bola
 
-# Variáveis de posição vertical para 8 passadas
-positions_y = [
-    screen_height // 9, 2 * screen_height // 9, 3 * screen_height // 9,
-    4 * screen_height // 9, 5 * screen_height // 9, 6 * screen_height // 9,
-    7 * screen_height // 9, 8 * screen_height // 9
-]
+# Variáveis de posição vertical
+positions_y = [screen_height // 5, 2 * screen_height // 5, 3 * screen_height // 5, 4 * screen_height // 5]
 current_y_index = 0  # Começa na posição superior
 ball_y = positions_y[current_y_index]  # Define a posição inicial da bola
 
@@ -48,23 +44,20 @@ while running:
             screen_width, screen_height = event.size
             screen = pygame.display.set_mode((screen_width, screen_height), pygame.RESIZABLE)
             
-            # Atualizar posições verticais, logo e velocidade
-            positions_y = [
-                screen_height // 9, 2 * screen_height // 9, 3 * screen_height // 9,
-                4 * screen_height // 9, 5 * screen_height // 9, 6 * screen_height // 9,
-                7 * screen_height // 9, 8 * screen_height // 9
-            ]
+            # Atualizar posições verticais e logo
+            positions_y = [screen_height // 5, 2 * screen_height // 5, 3 * screen_height // 5, 4 * screen_height // 5]
             logo_x = screen_width - 220
-            ball_speed_x = (screen_width - 2 * ball_radius) // 9
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 moving = not moving  # Iniciar ou parar o movimento
             elif event.key == pygame.K_ESCAPE:
                 running = False  # Sair do programa
             elif event.key == pygame.K_PLUS or event.key == pygame.K_KP_PLUS:
-                ball_speed_x += 1  # Aumentar a velocidade
+                # Aumentar a velocidade mantendo a direção
+                ball_speed_x += 1 if ball_speed_x > 0 else -1
             elif event.key == pygame.K_MINUS or event.key == pygame.K_KP_MINUS:
-                ball_speed_x = max(1, ball_speed_x - 1)  # Diminuir a velocidade com limite mínimo
+                # Diminuir a velocidade mantendo a direção, com velocidade mínima de 1
+                ball_speed_x = (abs(ball_speed_x) - 1) * (1 if ball_speed_x > 0 else -1)
             elif event.key == pygame.K_v:  # Alternar visibilidade com a tecla "V"
                 visible = not visible  # Alternar visibilidade
 
@@ -72,11 +65,11 @@ while running:
     if moving:
         ball_x += ball_speed_x
 
-        # Verificar se a bola atinge os limites da tela
-        if ball_x + ball_radius > screen_width or ball_x - ball_radius < 0:
+        # Verificar se a bola atinge as extremidades da tela
+        if ball_x - ball_radius <= 0 or ball_x + ball_radius >= screen_width:
             # Inverter a direção horizontal
             ball_speed_x = -ball_speed_x
-
+            
             # Mover para a próxima posição vertical
             current_y_index += 1
             if current_y_index >= len(positions_y):
@@ -93,6 +86,6 @@ while running:
         pygame.draw.circle(screen, ball_color, (ball_x, ball_y), ball_radius)
 
     pygame.display.flip()
-    clock.tick(10)  # Manter 200 FPS
+    clock.tick(200)  # Manter 200 FPS
 
 pygame.quit()
