@@ -67,7 +67,7 @@ while running:
             # Mover para a próxima posição vertical
             current_y_index += 1
             if current_y_index >= len(positions_y):
-                pygame.time.delay(3000)  # Pausa de 3 segundos antes de reiniciar
+                pygame.time.delay(700)  # Pausa de 3 segundos antes de reiniciar
                 current_y_index = 0  # Reiniciar do topo se atingir o fim das posições
 
             ball_y = positions_y[current_y_index]  # Atualiza a posição vertical
